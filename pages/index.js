@@ -1,11 +1,11 @@
 import { Fragment, useContext } from 'react';
+import { userContext } from '@libs/context';
 
 import Link from 'next/link';
 import RuleList from '@components/RuleList';
+import Metatags from '@components/MetaTags';
 
 import { getRules } from '@libs/firebase';
-import MetaTags from '@components/MetaTags';
-import { userContext } from '@libs/context';
 
 const LIMIT = 10;
 
@@ -23,7 +23,7 @@ export default function Home({ rules }) {
   const { user } = useContext(userContext);
   return (
     <Fragment>
-      <MetaTags title="Home" />
+      <Metatags title="Home" />
       <main className="h-screen overflow-scroll">
         <div className={`px-2 mx-auto my-2 sm:w-3/4 md:w-3/5 lg:w-2/4`}>
           {user ? (

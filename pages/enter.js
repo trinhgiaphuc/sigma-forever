@@ -7,13 +7,13 @@ import googleIcon from '@public/google.svg';
 import Image from 'next/image';
 import Router from 'next/router';
 
+import Metatags from '@components/MetaTags';
 import ErrorMessage from '@components/ErrorMessage';
 import UpdateProfileForm from '@components/UpdateProfileForm';
 
 import { createUserWithEmailAndPassword } from 'firebase/auth';
 import { auth, githubProvider, googleProvider } from '@libs/firebase';
 import { signInWithEmailAndPassword, signInWithPopup } from 'firebase/auth';
-import MetaTags from '@components/MetaTags';
 
 export default function EnterPage() {
   const { user, username } = useContext(userContext);
@@ -23,7 +23,7 @@ export default function EnterPage() {
 
   return (
     <Fragment>
-      <MetaTags title="login page" />
+      <Metatags title="login page" />
       {user && !username ? <UpdateProfileForm user={user} /> : null}
 
       {signUp ? (

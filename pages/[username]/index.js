@@ -1,11 +1,12 @@
-import Loading from '@components/Loading';
-import LoginRequestButton from '@components/LoginRequestButton';
-import MetaTags from '@components/MetaTags';
+import { useContext } from 'react';
+import { userContext } from '@libs/context';
+import { db, getUserWithUsername, ruleToJSON } from '@libs/firebase';
+
+import Metatags from '@components/MetaTags';
 import RuleList from '@components/RuleList';
 import UserProfile from '@components/UserProfile';
-import { userContext } from '@libs/context';
+import LoginRequestButton from '@components/LoginRequestButton';
 
-import { auth, db, getUserWithUsername, ruleToJSON } from '@libs/firebase';
 import {
   collection,
   getDocs,
@@ -13,8 +14,6 @@ import {
   orderBy,
   query as dbQuery,
 } from 'firebase/firestore';
-import Link from 'next/link';
-import { useContext } from 'react';
 
 export async function getServerSideProps({ query }) {
   const { username } = query;
@@ -43,7 +42,7 @@ export default function UserProfilePage({ user, rules }) {
 
   return (
     <main className="h-[94vh] mt-3 overflow-y-scroll">
-      <MetaTags title="user page" />
+      <Metatags title="user page" />
       <div className="container mx-auto flex flex-col items-center gap-2 p-4 bg-yellow-200 rounded-xl shadow-md shadow-black">
         <UserProfile user={user} />
         <div
