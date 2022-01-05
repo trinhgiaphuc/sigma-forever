@@ -2,7 +2,7 @@ import { useContext } from 'react';
 import { userContext } from '@libs/context';
 import { db, getUserWithUsername, ruleToJSON } from '@libs/firebase';
 
-import Metatags from '@components/MetaTags';
+import Metatags from '@components/Metatags';
 import RuleList from '@components/RuleList';
 import UserProfile from '@components/UserProfile';
 import LoginRequestButton from '@components/LoginRequestButton';

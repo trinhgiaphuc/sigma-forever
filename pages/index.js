@@ -3,7 +3,7 @@ import { userContext } from '@libs/context';
 
 import Link from 'next/link';
 import RuleList from '@components/RuleList';
-import Metatags from '@components/MetaTags';
+import Metatags from '@components/Metatags';
 
 import { getRules } from '@libs/firebase';
 

@@ -1,9 +1,9 @@
-import MetaTags from '@components/MetaTags';
+import Metatags from '@components/Metatags';
 
 export default function AboutPage() {
   return (
     <main className="mx-2 mt-10 text-center">
-      <MetaTags title="about page" />
+      <Metatags title="about page" />
       <h1 className="text-3xl tracking-wide font-bold uppercase">
         Sigma Forever
       </h1>
