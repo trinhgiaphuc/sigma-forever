@@ -1,6 +1,9 @@
+import MetaTags from '@components/MetaTags';
+
 export default function AboutPage() {
   return (
-    <div className="mx-2 mt-10 text-center">
+    <main className="mx-2 mt-10 text-center">
+      <MetaTags title="about page" />
       <h1 className="text-3xl tracking-wide font-bold uppercase">
         Sigma Forever
       </h1>
@@ -11,6 +14,6 @@ export default function AboutPage() {
         situation except these situations mentioned below:
       </h5>
       <p>1.Alo</p>
-    </div>
+    </main>
   );
 }

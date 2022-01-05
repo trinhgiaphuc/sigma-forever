@@ -37,6 +37,10 @@
     @apply border-b-2 border-zinc-500;
   }
 
+  .rule {
+    @apply p-2 bg-orange-200 rounded tracking-wide border shadow-md shadow-neutral-600 md:text-xl lg:text-2xl;
+  }
+
   .close-nav {
     @apply w-6 h-6 flex flex-col items-center justify-around cursor-pointer md:w-9 md:h-9;
   }

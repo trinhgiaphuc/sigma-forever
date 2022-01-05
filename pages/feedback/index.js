@@ -1,3 +1,5 @@
+import MetaTags from '@components/MetaTags';
+
 export default function ContactPage() {
-  return <div>cu cac</div>;
+  return <MetaTags title="feedback page" />;
 }

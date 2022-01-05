@@ -1,5 +1,6 @@
-import React, { Fragment, useContext, useState } from 'react';
+import React, { Fragment, useContext, useEffect, useState } from 'react';
 import useWindowWide from '../libs/hooks/useWindowWide';
+import { userContext } from '@libs/context';
 import { useRouter } from 'next/router';
 
 import Link from 'next/link';
@@ -11,16 +12,16 @@ import userImageSrc from '@public/user_avatar_low.jpg';
 
 import { signOut } from 'firebase/auth';
 import { auth } from '../libs/firebase';
-import { userContext } from '../libs/userContext/userContext';
 
 function Navbar() {
-  const { user, setUser } = useContext(userContext);
-  const router = useRouter();
+  const { user, username } = useContext(userContext);
 
   const inSmallScreen = useWindowWide(640);
 
   const [showModal, setShowModal] = useState(true);
   const [showNavItems, setShowNavItems] = useState(true);
+
+  const router = useRouter();
 
   const showModalHandle = () => {
     setShowModal(true);
@@ -33,15 +34,17 @@ function Navbar() {
     }
   };
 
-  const signOutHandle = () => {
-    if (!user) router.push('/login');
+  const signOutHandle = async () => {
     showModalHandle();
-    signOut(auth);
-    setUser(null);
+    if (!user) router.push('/enter');
+    else {
+      await signOut(auth);
+      router.reload();
+    }
   };
 
   return (
-    <nav className="navbar" id="navbar">
+    <nav className="navbar shadow-sm shadow-zinc-400" id="navbar">
       {/* LOGO */}
       <Link href="/" passHref>
         <a className="logo z-20" onClick={showModalHandle}>
@@ -65,8 +68,8 @@ function Navbar() {
 
       {/* USER TAG */}
       {user ? (
-        <Link href="/profile" passHref className="flex-center">
-          <div className="flex items-center  cursor-pointer gap-2 rounded-full sm:rounded-2xl sm:px-2 sm:py-1 md:bg-zinc-200">
+        <Link href={`/${username}`} passHref className="flex-center">
+          <div className="flex items-center cursor-pointer gap-2 rounded-full shadow-sm shadow-black md:rounded-2xl md:px-4 md:py-1 md:bg-orange-300">
             <Image
               className="rounded-full"
               src={user.photoURL || userImageSrc}
@@ -75,7 +78,7 @@ function Navbar() {
               alt="user profile picture"
               objectFit
             />
-            <h2 className="font-semibold hidden md:block">Đại Hiệp Who</h2>
+            <h2 className="font-semibold hidden md:block">{username}</h2>
           </div>
         </Link>
       ) : null}

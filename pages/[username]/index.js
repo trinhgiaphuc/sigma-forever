@@ -1,56 +1,69 @@
-import { Fragment } from 'react';
-
-import firefilledSrc from '@public/firefilled.png';
-import userImageSrc from '@public/user_avatar.jpg';
-
-import Image from 'next/image';
-import spinnerUrl from '@public/Spinner.svg';
+import Loading from '@components/Loading';
+import LoginRequestButton from '@components/LoginRequestButton';
+import MetaTags from '@components/MetaTags';
 import RuleList from '@components/RuleList';
-import useUserData from '@libs/hooks/useUserData';
+import UserProfile from '@components/UserProfile';
+import { userContext } from '@libs/context';
 
-function UserProfilePage() {
-  const { user } = useUserData();
+import { auth, db, getUserWithUsername, ruleToJSON } from '@libs/firebase';
+import {
+  collection,
+  getDocs,
+  limit,
+  orderBy,
+  query as dbQuery,
+} from 'firebase/firestore';
+import Link from 'next/link';
+import { useContext } from 'react';
 
-  return (
-    <div className="container h-[94vh] mx-auto flex flex-col items-center gap-2 p-4 bg-yellow-200 overflow-y-scroll">
-      {user ? (
-        <Fragment>
-          <div className="w-[45%] md:w-[30%] lg:w-[20%] xl:w-[15%] border-2 border-black text-none">
-            <Image
-              priority
-              src={user.photoURL || userImageSrc}
-              width={500}
-              height={500}
-              alt="user profile picture"
-            />
-          </div>
-          <h1 className="font-bold text-2xl">{user.displayName}</h1>
-          <p className="italic text-xl text-center tracking-widest ">
-            Anh em nên nhớ, tóc không máu lửa, đời không nể.
-          </p>
-          <div className="flex-center flex-col tracking-wider text-2xl">
-            <div className="flex items-center">
-              <div className="w-10 h-10 saturate-200">
-                <Image
-                  src={firefilledSrc}
-                  alt="fire icon"
-                  width={256}
-                  height={256}
-                />
-              </div>
-              <p>: 231</p>
-            </div>
-            <p>Rules Created: 21</p>
-          </div>
-        </Fragment>
-      ) : (
-        <div className="w-28 sm:w-40">
-          <Image src={spinnerUrl} alt="loading icon" width={200} height={200} />
-        </div>
-      )}
-      <RuleList />
-    </div>
-  );
+export async function getServerSideProps({ query }) {
+  const { username } = query;
+  const userDoc = await getUserWithUsername(username);
+
+  let user = null;
+  let rules = null;
+
+  if (!userDoc?.exists) return { notFound: true };
+  else {
+    user = userDoc.data();
+
+    const rulesQuery = dbQuery(
+      collection(db, 'users', userDoc.id, 'rules'),
+      orderBy('ruleNumber', 'asc'),
+      limit(5)
+    );
+    rules = (await getDocs(rulesQuery)).docs.map(ruleToJSON);
+  }
+
+  return { props: { user, rules } };
 }
 
-export default UserProfilePage;
+export default function UserProfilePage({ user, rules }) {
+  const { username } = useContext(userContext);
+
+  return (
+    <main className="h-[94vh] mt-3 overflow-y-scroll">
+      <MetaTags title="user page" />
+      <div className="container mx-auto flex flex-col items-center gap-2 p-4 bg-yellow-200 rounded-xl shadow-md shadow-black">
+        <UserProfile user={user} />
+        <div
+          className={`px-2 mt-5 pt-5 border-t-[3px] border-t-zinc-700 mx-auto md:w-3/4`}
+        >
+          {username ? (
+            rules?.length ? (
+              <RuleList rules={rules} />
+            ) : (
+              <h1 className="label text-center border-2 border-zinc-800 text-zinc-800 rounded-md px-5 py-6 mt-10">
+                No rules found
+              </h1>
+            )
+          ) : (
+            <LoginRequestButton>
+              Please login to see profile and all the rules posted by this user
+            </LoginRequestButton>
+          )}
+        </div>
+      </div>
+    </main>
+  );
+}
