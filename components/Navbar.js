@@ -1,4 +1,4 @@
-import React, { Fragment, useContext, useEffect, useState } from 'react';
+import React, { Fragment, useContext, useState } from 'react';
 import useWindowWide from '../libs/hooks/useWindowWide';
 import { userContext } from '@libs/context';
 import { useRouter } from 'next/router';
@@ -11,9 +11,9 @@ import { FaSearch, FaBars, FaRegWindowClose } from 'react-icons/fa';
 import userImageSrc from '@public/user_avatar_low.jpg';
 
 import { signOut } from 'firebase/auth';
-import { auth } from '../libs/firebase';
+import { auth, getUserWithUsername } from '../libs/firebase';
 
-function Navbar() {
+export default function Navbar() {
   const { user, username } = useContext(userContext);
 
   const inSmallScreen = useWindowWide(640);
@@ -132,5 +132,3 @@ function Navbar() {
     </nav>
   );
 }
-
-export default React.memo(Navbar);

@@ -1,8 +1,9 @@
-import { useCallback, useEffect, useState } from 'react';
+import { Fragment, useCallback, useEffect, useState } from 'react';
 import debounce from 'lodash.debounce';
 
-import { db } from '@libs/firebase';
-import { doc, getDoc, writeBatch } from 'firebase/firestore';
+import { db, auth, storage } from '@libs/firebase';
+import { doc, getDoc, writeBatch, updateDoc } from 'firebase/firestore';
+import { getDownloadURL, ref, uploadBytesResumable } from 'firebase/storage';
 
 import { AiFillPlusCircle } from 'react-icons/ai';
 import userImageSrc from '@public/user_avatar.jpg';
@@ -10,7 +11,9 @@ import Image from 'next/image';
 import Modal from './Modal';
 
 export default function UpdateProfileForm({ user }) {
+  const [imageUrl, setImageUrl] = useState(user.photoURL);
   const [name, setName] = useState('');
+  const [bio, setBio] = useState(user.bio);
   const [isValid, setIsValid] = useState(false);
   const [loading, setLoading] = useState(false);
 
@@ -31,10 +34,6 @@ export default function UpdateProfileForm({ user }) {
     }
   };
 
-  useEffect(() => {
-    checkUsername(name);
-  }, [checkUsername, name]);
-
   // eslint-disable-next-line react-hooks/exhaustive-deps
   const checkUsername = useCallback(
     debounce(async username => {
@@ -49,14 +48,19 @@ export default function UpdateProfileForm({ user }) {
     []
   );
 
+  useEffect(() => {
+    checkUsername(name);
+  }, [checkUsername, name]);
+
+  const userDoc = doc(db, 'users', auth.currentUser.uid);
   async function updateUserProfile(e) {
     e.preventDefault();
 
     const batch = writeBatch(db);
-    const userDoc = doc(db, 'users', user.uid);
     const usernameDoc = doc(db, 'username', e.target[1].value);
 
     batch.set(userDoc, {
+      bio: e.target.bio.value,
       username: name,
       email: user.email,
       createdAt: user.metadata.creationTime,
@@ -71,20 +75,46 @@ export default function UpdateProfileForm({ user }) {
     }
   }
 
+  async function updateAgain(e) {
+    e.preventDefault();
+    const file = Array.from(e.target.picture.files)[0];
+    const extension = file.type.split('/')[1];
+
+    const imageRef = ref(
+      storage,
+      `uploads/${auth.currentUser.uid}.${extension}`
+    );
+    await uploadBytesResumable(imageRef, file).then(async () => {
+      const url = await getDownloadURL(imageRef);
+      updateDoc(userDoc, {
+        bio,
+        photoURL: url,
+      });
+    });
+  }
+
   return (
     <Modal>
       <form
-        onSubmit={updateUserProfile}
+        onSubmit={user.username ? updateAgain : updateUserProfile}
         className="flex flex-col mx-auto gap-4 w-[80%] md:w-full xl:w-[70%] self-end"
       >
-        <div className="w-48 sm:w-56 md:w-64 lg:w-72 xl:w-96 mb-4 relative mx-auto aspect-square rounded-full border-4 border-black overflow-hidden text-none">
+        <div className="w-44 sm:w-56 md:w-64 lg:w-72 xl:w-96 relative mx-auto aspect-square rounded-full border-4 border-black overflow-hidden text-none">
           <input
+            onChange={e => {
+              const imgObj = e.target.files[0];
+              const url = URL.createObjectURL(imgObj);
+              setImageUrl(url);
+            }}
+            accept="image/x-png,image/gif,image/jpeg"
+            max={1}
+            id="picture"
             type="file"
             className="absolute w-full h-full z-30 bg-transparent top-0 left-0 cursor-pointer"
           />
           <Image
             priority
-            src={user ? user.photoURL || userImageSrc : userImageSrc}
+            src={imageUrl ? imageUrl : userImageSrc}
             width={500}
             height={500}
             alt="user profile picture"
@@ -92,28 +122,44 @@ export default function UpdateProfileForm({ user }) {
           <AiFillPlusCircle className="absolute text-2xl top-[80%] left-[69%] text-yellow-400 md:text-3xl lg:text-4xl xl:text-5xl rounded-full shadow-sm shadow-black" />
         </div>
 
-        <div className="flex flex-col">
-          <label className="label" htmlFor="username">
-            username
+        <div className="flex flex-col gap-2">
+          {user.username ? null : (
+            <Fragment>
+              <label className="label" htmlFor="username">
+                username
+              </label>
+              <input
+                value={name}
+                onChange={onChange}
+                placeholder="username"
+                className="user__form-input rounded-lg border border-black"
+                type="text"
+              />
+              <UsernameMessage
+                username={name}
+                isValid={isValid}
+                loading={loading}
+              />
+            </Fragment>
+          )}
+
+          <label className="label" htmlFor="bio">
+            bio
           </label>
-          <input
-            value={name}
-            onChange={onChange}
-            placeholder="username"
-            className="user__form-input"
+          <textarea
+            id="bio"
+            value={bio}
+            onChange={e => setBio(e.target.value)}
+            placeholder="bio"
             type="text"
-          />
-          <UsernameMessage
-            username={name}
-            isValid={isValid}
-            loading={loading}
+            className="user__form-input rounded-lg resize-none border border-black whitespace-pre-wrap"
           />
         </div>
         <button
           type="submit"
-          disabled={!isValid}
+          disabled={!isValid && !user.username}
           className={`btn border-black hover:bg-red-200 ${
-            !isValid && 'cursor-not-allowed'
+            !isValid && !user.username && 'cursor-not-allowed'
           }`}
         >
           Update Profile

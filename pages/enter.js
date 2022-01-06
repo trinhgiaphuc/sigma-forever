@@ -1,4 +1,4 @@
-import { Fragment, useContext, useEffect, useState } from 'react';
+import { Fragment, useContext, useState } from 'react';
 import { userContext } from '@libs/context';
 
 import githubIcon from '@public/github.svg';
@@ -7,7 +7,7 @@ import googleIcon from '@public/google.svg';
 import Image from 'next/image';
 import Router from 'next/router';
 
-import Metatags from '@components/MetaTags';
+import Metatags from '@components/Metatags';
 import ErrorMessage from '@components/ErrorMessage';
 import UpdateProfileForm from '@components/UpdateProfileForm';
 
@@ -19,7 +19,7 @@ export default function EnterPage() {
   const { user, username } = useContext(userContext);
   const [signUp, setSignUp] = useState(false);
 
-  if (auth.currentUser) Router.back();
+  if (auth.currentUser && username) Router.back();
 
   return (
     <Fragment>

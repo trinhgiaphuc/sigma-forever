@@ -5,10 +5,10 @@ import userImageSrc from '@public/user_avatar.jpg';
 import firefilledSrc from '@public/firefilled.png';
 import Loading from './Loading';
 
-export default function UserProfile({ user }) {
+export default function UserProfile({ user, username }) {
   return user ? (
     <Fragment>
-      <div className="w-[45%] md:w-[30%] lg:w-[20%] xl:w-[15%] border border-black rounded-full overflow-hidden text-none">
+      <div className="relative w-[45%] md:w-[30%] lg:w-[20%] xl:w-[15%] border border-black rounded-full overflow-hidden text-none">
         <Image
           priority
           src={user ? user.photoURL || userImageSrc : userImageSrc}
@@ -18,9 +18,7 @@ export default function UserProfile({ user }) {
         />
       </div>
       <h1 className="font-bold text-2xl">{user.username}</h1>
-      <p className="italic text-xl text-center tracking-widest">
-        Anh em nên nhớ, tóc không máu lửa, đời không nể.
-      </p>
+      <p className="italic text-xl text-center tracking-widest">{user.bio}</p>
       <div className="flex-center flex-col tracking-wider text-2xl">
         <div className="flex items-center">
           <div className="w-10 h-10 saturate-200">

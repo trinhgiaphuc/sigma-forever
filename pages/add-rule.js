@@ -15,6 +15,7 @@ export async function getServerSideProps(context) {
 
 export default function AddRulePage({ lastRuleNumber }) {
   const { username } = useContext(userContext);
+  const [content, setContent] = useState('');
   const [boxSelected, setBoxSelected] = useState([]);
 
   const addNewRule = async e => {
@@ -33,6 +34,9 @@ export default function AddRulePage({ lastRuleNumber }) {
       createdAt: serverTimestamp(),
       updatedAt: serverTimestamp(),
     });
+
+    setContent('');
+    setBoxSelected([]);
   };
 
   const handleBoxChecked = value => {
@@ -94,6 +98,8 @@ export default function AddRulePage({ lastRuleNumber }) {
               </div>
             </div>
             <textarea
+              onChange={e => setContent(e.target.value)}
+              value={content}
               className="input-form h-[45vh] px-5 py-3 font-ibm resize-none bg-zinc-100 outline-none shadow-md shadow-zinc-400"
               placeholder="What do you want to grind today, my Sigma brother?"
               name="rule"

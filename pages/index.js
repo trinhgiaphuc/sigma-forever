@@ -24,7 +24,7 @@ export default function Home({ rules }) {
   return (
     <Fragment>
       <Metatags title="Home" />
-      <main className="h-screen overflow-scroll">
+      <main className="h-[93vh] pb-20 overflow-y-scroll">
         <div className={`px-2 mx-auto my-2 sm:w-3/4 md:w-3/5 lg:w-2/4`}>
           {user ? (
             <Link href="/add-rule" passHref>
@@ -34,7 +34,13 @@ export default function Home({ rules }) {
               />
             </Link>
           ) : null}
-          <RuleList rules={rules} />
+          {rules.length ? (
+            <RuleList rules={rules} />
+          ) : (
+            <h1 className="label text-center border-2 border-zinc-800 text-zinc-800 rounded-md px-5 py-6 mt-2">
+              No rules found
+            </h1>
+          )}
         </div>
       </main>
     </Fragment>

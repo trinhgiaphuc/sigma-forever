@@ -9,13 +9,13 @@ export default function Rule({ rule }) {
 
   return (
     <div className="relative">
-      <div className="flex flex-col justify-between p-2 gap-2 sm:flex-row ">
+      <div className="flex justify-between p-2 gap-4 flex-wrap ">
         <p className="text-xs self-start">Sigma Rule #{rule.ruleNumber}</p>
         <p className="italic text-xs self-end">{createdAt}</p>
       </div>
 
       <Link href={`/${rule.author}/${rule.ruleNumber}`} passHref>
-        <h2 className="font-medium text-xl lg:text-2xl p-3 text-center cursor-pointer">
+        <h2 className="font-medium text-xl lg:text-2xl p-3 text-center cursor-pointer whitespace-pre-wrap">
           {rule.content}
         </h2>
       </Link>

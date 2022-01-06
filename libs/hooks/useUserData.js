@@ -12,9 +12,9 @@ export default function useUserData() {
 
     onAuthStateChanged(auth, userData => {
       if (userData) {
-        setUser(userData);
         const ref = doc(db, 'users', userData.uid);
         unsubscribe = onSnapshot(ref, doc => {
+          setUser(doc.data());
           setUsername(doc.data()?.username);
         });
       } else {
