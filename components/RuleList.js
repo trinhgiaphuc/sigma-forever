@@ -1,11 +1,14 @@
 import Rule from './Rule';
 
-export default function RuleList({ rules }) {
+export default function RuleList({ rules, viewDetail, setViewDetail, color }) {
   return (
-    <ul className="flex flex-col gap-5 font-ibm p-2">
+    <ul className="flex flex-col font-ibm px-2 pb-24 h-full gap-10 lg:pr-10 overflow-y-scroll overflow-x-hidden no-scrollbar">
       {rules.map(rule => (
-        <li key={rule.ruleNumber} className="rule">
-          <Rule rule={rule} />
+        <li
+          onClick={() => setViewDetail(rule.ruleNumber)}
+          key={rule.ruleNumber}
+        >
+          <Rule rule={rule} viewDetail={viewDetail} />
         </li>
       ))}
     </ul>

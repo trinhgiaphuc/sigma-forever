@@ -9,14 +9,6 @@
 }
 
 @layer components {
-  .text-none {
-    font-size: 0px;
-  }
-
-  .flex-center {
-    @apply flex items-center justify-center;
-  }
-
   .logo {
     @apply font-medium font-ibm outline-none tracking-wider text-3xl sm:text-3xl md:text-3xl lg:text-4xl xl:text-5xl;
   }
@@ -38,7 +30,7 @@
   }
 
   .rule {
-    @apply p-2 bg-orange-200 rounded tracking-wide border shadow-md shadow-neutral-600 md:text-xl lg:text-2xl;
+    @apply bg-orange-200 relative p-2 rounded-lg tracking-wide md:text-xl lg:text-2xl;
   }
 
   .close-nav {
@@ -53,15 +45,6 @@
     @apply font-medium tracking-wide uppercase;
   }
 
-  .no-scrollbar::-webkit-scrollbar {
-    display: none;
-  }
-
-  .no-scrollbar {
-    -ms-overflow-style: none;
-    scrollbar-width: none;
-  }
-
   .user__form-input {
     @apply border rounded bg-slate-50 outline-none p-2;
   }
@@ -72,5 +55,105 @@
 
   .btn-sign {
     @apply w-3/4 items-center sm:w-1/2 lg:w-3/4 border-black;
+  }
+
+  .bg-card {
+    background-color: #a1ffce;
+    background-image: linear-gradient(90deg, wheat 0%, #fce 100%);
+  }
+
+  .bg-card-invert {
+    background-color: #ea8d8d;
+    background-image: linear-gradient(90deg, #a890fe 0%, #ea8d8d 100%);
+  }
+
+  .bg-card-selected {
+    background-color: #2c3e50;
+    background-image: linear-gradient(90deg, #f0cb35 0%, #fa8d8d 100%);
+  }
+
+  .bg-card-selected-invert {
+    background-color: #f0cb35;
+    background-image: linear-gradient(90deg, #fa8d8d 0%, #f0cb35 100%);
+  }
+
+  .bg-card-2 {
+    background-color: #38ef7d;
+    background-image: linear-gradient(90deg, #11998e 0%, #38ef7d 100%);
+  }
+
+  .bg-card-2-selected-invert {
+    background-color: #11998e;
+    background-image: linear-gradient(90deg, #38ef7d 0%, #11998e 100%);
+  }
+
+  .rule-btn {
+    @apply py-2 border border-black rounded-md flex-grow;
+  }
+
+  .add-a-rule {
+    @apply p-4 w-[90%] block mx-auto my-2 sm:w-3/4 md:w-3/5 lg:w-2/4 outline-none border rounded-lg border-zinc-400 shadow-sm shadow-zinc-500;
+  }
+}
+
+@layer utilities {
+  .flex-center {
+    @apply flex items-center justify-center;
+  }
+
+  .text-none {
+    font-size: 0px;
+  }
+
+  .no-scrollbar::-webkit-scrollbar {
+    display: none;
+  }
+
+  .no-scrollbar {
+    -ms-overflow-style: none;
+    scrollbar-width: none;
+  }
+
+  .colorful-text {
+    background-image: linear-gradient(
+      to left,
+      violet,
+      indigo,
+      green,
+      blue,
+      yellow,
+      orange,
+      red
+    );
+    -webkit-background-clip: text;
+    -moz-background-clip: text;
+    background-clip: text;
+    color: transparent;
+    max-width: max-content;
+  }
+
+  .colorful-text-invert {
+    background-image: linear-gradient(
+      to left,
+      red,
+      orange,
+      yellow,
+      blue,
+      green,
+      indigo,
+      violet
+    );
+    -webkit-background-clip: text;
+    -moz-background-clip: text;
+    background-clip: text;
+    color: transparent;
+    max-width: max-content;
+  }
+
+  .animate-btn {
+    @apply shadow-sm shadow-zinc-800 active:scale-95 active:shadow-transparent transition-all;
+  }
+  .animate-card {
+    @apply shadow-md shadow-zinc-800 active:scale-95 active:shadow-sm active:shadow-zinc-800 transition-all;
   }
 }

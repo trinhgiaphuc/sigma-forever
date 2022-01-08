@@ -4,14 +4,13 @@ import { userContext } from '@libs/context';
 import { useRouter } from 'next/router';
 
 import Link from 'next/link';
-import Image from 'next/image';
 import Modal from './Modal';
 import SearchBar from './SearchBar';
 import { FaSearch, FaBars, FaRegWindowClose } from 'react-icons/fa';
-import userImageSrc from '@public/user_avatar_low.jpg';
 
 import { signOut } from 'firebase/auth';
-import { auth, getUserWithUsername } from '../libs/firebase';
+import { auth } from '../libs/firebase';
+import UserTag from './UserTag';
 
 export default function Navbar() {
   const { user, username } = useContext(userContext);
@@ -67,21 +66,7 @@ export default function Navbar() {
       </div>
 
       {/* USER TAG */}
-      {user ? (
-        <Link href={`/${username}`} passHref className="flex-center">
-          <div className="flex items-center cursor-pointer gap-2 rounded-full shadow-sm shadow-black md:rounded-2xl md:px-4 md:py-1 md:bg-orange-300">
-            <Image
-              className="rounded-full"
-              src={user.photoURL || userImageSrc}
-              width={inSmallScreen ? 30 : 48}
-              height={inSmallScreen ? 30 : 48}
-              alt="user profile picture"
-              objectFit
-            />
-            <h2 className="font-semibold hidden md:block">{username}</h2>
-          </div>
-        </Link>
-      ) : null}
+      {user ? <UserTag username={username} user={user} /> : null}
 
       {/* NAVIGATION */}
       <button

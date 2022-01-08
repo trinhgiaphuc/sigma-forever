@@ -1,12 +1,13 @@
 import { useContext, useState } from 'react';
 import { userContext } from '@libs/context';
-import { db, getUserWithUsername, ruleToJSON } from '@libs/firebase';
 
 import Metatags from '@components/Metatags';
 import RuleList from '@components/RuleList';
 import UserProfile from '@components/UserProfile';
 import LoginRequestButton from '@components/LoginRequestButton';
+import UpdateProfileForm from '@components/UpdateProfileForm';
 
+import { db, getUserWithUsername, ruleToJSON } from '@libs/firebase';
 import {
   collection,
   getDocs,
@@ -14,7 +15,6 @@ import {
   orderBy,
   query as dbQuery,
 } from 'firebase/firestore';
-import UpdateProfileForm from '@components/UpdateProfileForm';
 
 export async function getServerSideProps({ query }) {
   const { username } = query;
@@ -26,7 +26,6 @@ export async function getServerSideProps({ query }) {
   if (!userDoc?.exists) return { notFound: true };
   else {
     user = userDoc.data();
-
     const rulesQuery = dbQuery(
       collection(db, 'users', userDoc.id, 'rules'),
       orderBy('ruleNumber', 'asc'),

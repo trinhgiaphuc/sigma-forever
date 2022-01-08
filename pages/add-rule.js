@@ -106,7 +106,7 @@ export default function AddRulePage({ lastRuleNumber }) {
               id="rule"
               maxLength={5000}
             />
-            <button className="sm:w-[50%] sm:mx-auto p-6 mb-8 shadow-sm shadow-zinc-400 border font-medium uppercase border-black rounded bg-zinc-100">
+            <button className="sm:w-[50%] sm:mx-auto p-6 mb-8 shadow-sm shadow-zinc-400 border font-medium uppercase border-black rounded bg-zinc-100 active: animate-btn">
               Post
             </button>
           </form>
